@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Operations Center - BusGo</title>
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/common.css">
+  <link rel="stylesheet" href="assets/css/admin.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body class="admin-layout">
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="admin-brand">
+      <div class="admin-brand-title">Bus<span>Go</span></div>
+      <span class="admin-badge">Admin</span>
+    </div>
+
+    <nav class="admin-nav">
+      <a class="admin-nav-item active" data-view="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span>Dashboard</span>
+      </a>
+
+      <a class="admin-nav-item" data-view="schedules">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span>Trip Schedules</span>
+      </a>
+
+      <a class="admin-nav-item" data-view="buses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6v6"/><path d="M15 6v6"/><path d="M2 12h19.6"/><path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2L21 10h-3"/><rect x="2" y="6" width="16" height="12" rx="2"/><circle cx="6" cy="18" r="2"/><circle cx="14" cy="18" r="2"/></svg>
+        <span>Bus Fleet</span>
+      </a>
+
+      <a class="admin-nav-item" data-view="routes">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a4.5 4.5 0 0 0 0-9H5a3 3 0 0 1 0-6h14"/></svg>
+        <span>Routes & Fares</span>
+      </a>
+
+      <a class="admin-nav-item" data-view="drivers">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>Drivers</span>
+      </a>
+
+      <a class="admin-nav-item" data-view="bookings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <span>Bookings & Refunds</span>
+      </a>
+
+      <a class="admin-nav-item" data-view="notifications">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        <span>WhatsApp Dispatches</span>
+      </a>
+    </nav>
+
+    <div class="admin-sidebar-footer">
+      <div class="admin-user-profile">
+        <div class="admin-avatar">AD</div>
+        <div class="admin-user-info">
+          <span class="admin-user-name" id="adminUserName">Admin</span>
+          <span class="admin-user-role">Super Administrator</span>
+        </div>
+      </div>
+      <button id="adminLogoutBtn" title="Logout" style="background:transparent; border:none; color:#94a3b8; cursor:pointer;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main View -->
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <h1 class="admin-topbar-title" id="adminViewTitle">Operations Dashboard</h1>
+      <div class="admin-topbar-actions">
+        <a href="index.html" class="btn btn-secondary btn-sm" target="_blank">View Passenger Portal &nearr;</a>
+        <button id="cleanupHoldsBtn" class="btn btn-secondary btn-sm" title="Release seat locks whose 10-minute hold window has expired">
+          Clear Expired Holds
+        </button>
+        <button id="triggerDispatchBtn" class="btn btn-primary btn-sm" style="background:#059669; border-color:#059669;" title="Test and trigger driver manifests (Simulated in Mock Provider mode)">
+          Run WhatsApp Dispatch (Mock Simulation)
+        </button>
+      </div>
+    </header>
+
+    <main class="admin-content">
+      <!-- 1. DASHBOARD VIEW -->
+      <section id="viewDashboard" class="admin-view-panel active">
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-icon-wrap metric-icon-bookings">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>
+            </div>
+            <div class="metric-content">
+              <span class="metric-label">Confirmed Bookings</span>
+              <span class="metric-value" id="metricBookingsCount">0</span>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon-wrap metric-icon-revenue">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <div class="metric-content">
+              <span class="metric-label">Gross Revenue</span>
+              <span class="metric-value" id="metricRevenue">₹0</span>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon-wrap metric-icon-buses">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="16" height="12" rx="2"/><circle cx="6" cy="18" r="2"/><circle cx="14" cy="18" r="2"/></svg>
+            </div>
+            <div class="metric-content">
+              <span class="metric-label">Active Buses</span>
+              <span class="metric-value" id="metricBuses">0</span>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon-wrap metric-icon-dispatch">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            </div>
+            <div class="metric-content">
+              <span class="metric-label">WhatsApp Dispatches</span>
+              <span class="metric-value" id="metricDispatches">0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h3 class="admin-card-title">Recent Trips & Operational Schedules</h3>
+            <button class="btn btn-secondary btn-sm" id="dashViewAllSchedules">Manage All Schedules</button>
+          </div>
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Schedule ID</th>
+                  <th>Route</th>
+                  <th>Bus (Reg)</th>
+                  <th>Date & Time</th>
+                  <th>Assigned Driver</th>
+                  <th>Base Fare</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="dashSchedulesBody">
+                <!-- Dynamically loaded -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. SCHEDULES VIEW -->
+      <section id="viewSchedules" class="admin-view-panel" style="display:none;">
+        <div class="admin-card">
+          <div class="admin-card-header" style="flex-wrap: wrap; gap: 12px;">
+            <div>
+              <h3 class="admin-card-title">Trip Schedules</h3>
+              <div style="font-size:var(--text-xs); color:var(--color-text-muted); margin-top:2px;">
+                Showing today's and upcoming operational journeys by default.
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <select id="scheduleFilterSelect" class="form-control" style="width: auto; padding: 5px 12px; font-size: var(--text-xs); background: #0f172a; color: #f8fafc; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px;">
+                <option value="upcoming" selected>Upcoming & Today (Default)</option>
+                <option value="all">All Trips (Including Past History)</option>
+                <option value="past">Past Trips Only</option>
+              </select>
+              <button class="btn btn-primary btn-sm" id="openAddScheduleModalBtn">+ Add New Schedule</button>
+            </div>
+          </div>
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Route</th>
+                  <th>Bus</th>
+                  <th>Journey Date</th>
+                  <th>Departure</th>
+                  <th>Arrival</th>
+                  <th>Fare</th>
+                  <th>Driver</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="schedulesTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. BUSES VIEW -->
+      <section id="viewBuses" class="admin-view-panel" style="display:none;">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div>
+              <h3 class="admin-card-title">Bus Fleet Management</h3>
+              <div style="font-size:var(--text-xs); color:var(--color-text-muted); margin-top:2px;">
+                Active buses available for dispatch and route assignment.
+              </div>
+            </div>
+            <button class="btn btn-primary btn-sm" id="openAddBusModalBtn">+ Register Bus</button>
+          </div>
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Bus Name</th>
+                  <th>Registration</th>
+                  <th>Type</th>
+                  <th>Capacity</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="busesTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. ROUTES VIEW -->
+      <section id="viewRoutes" class="admin-view-panel" style="display:none;">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h3 class="admin-card-title">Routes & Pricing</h3>
+            <button class="btn btn-primary btn-sm" id="openAddRouteModalBtn">+ Add Route</button>
+          </div>
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Origin</th>
+                  <th>Destination</th>
+                  <th>Duration</th>
+                  <th>Base Fare</th>
+                  <th>Pickup / Drop</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="routesTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. DRIVERS VIEW -->
+      <section id="viewDrivers" class="admin-view-panel" style="display:none;">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h3 class="admin-card-title">Assigned Trip Drivers</h3>
+            <button class="btn btn-primary btn-sm" id="openAddDriverModalBtn">+ Add Driver</button>
+          </div>
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Driver Name</th>
+                  <th>License Number</th>
+                  <th>Mobile Number (WhatsApp)</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="driversTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. BOOKINGS VIEW -->
+      <section id="viewBookings" class="admin-view-panel" style="display:none;">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h3 class="admin-card-title">All Customer Reservations</h3>
+          </div>
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>PNR Ref</th>
+                  <th>Customer Email</th>
+                  <th>Contact Phone</th>
+                  <th>Route</th>
+                  <th>Date</th>
+                  <th>Seats</th>
+                  <th>Total Fare</th>
+                  <th>Status</th>
+                  <th>Payment</th>
+                </tr>
+              </thead>
+              <tbody id="bookingsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. WHATSAPP NOTIFICATIONS VIEW -->
+      <section id="viewNotifications" class="admin-view-panel" style="display:none;">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div>
+              <h3 class="admin-card-title">Driver WhatsApp Dispatch Log <span style="font-size: 11px; font-weight:600; padding: 2px 8px; border-radius: 4px; background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); margin-left: 8px;">MOCK SIMULATION MODE</span></h3>
+              <div style="font-size:var(--text-xs); color:var(--color-text-muted); margin-top:2px;">
+                Configured in simulated mock mode (busgo.whatsapp.mode=MOCK). Generates driver boarding manifests and dispatch logs without external carrier fees.
+              </div>
+            </div>
+            <button class="btn btn-secondary btn-sm" id="refreshNotifsBtn">Refresh Logs</button>
+          </div>
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Log ID</th>
+                  <th>Schedule ID</th>
+                  <th>Driver Recipient</th>
+                  <th>Mode / Status</th>
+                  <th>Trigger Source</th>
+                  <th>Dispatched At</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="notificationsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- MODAL: ADD / EDIT SCHEDULE -->
+  <div id="scheduleModal" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="scheduleModalTitle">Create Trip Schedule</h3>
+        <button class="modal-close-btn" data-modal="scheduleModal">&times;</button>
+      </div>
+      <form id="scheduleForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Bus</label>
+            <select id="schBusId" class="form-control" required></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Route</label>
+            <select id="schRouteId" class="form-control" required></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Assigned Driver</label>
+            <select id="schDriverId" class="form-control" required></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Journey Date</label>
+            <input type="date" id="schDate" class="form-control" required>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Departure Time</label>
+              <input type="time" id="schDepTime" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Arrival Time</label>
+              <input type="time" id="schArrTime" class="form-control" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Trip Fare (₹)</label>
+            <input type="number" id="schFare" class="form-control" min="100" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-modal="scheduleModal">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm">Save Schedule</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD BUS -->
+  <div id="busModal" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Register Bus</h3>
+        <button class="modal-close-btn" data-modal="busModal">&times;</button>
+      </div>
+      <form id="busForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Bus Name</label>
+            <input type="text" id="busName" class="form-control" placeholder="BusGo Royal Sleeper" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Registration Number</label>
+            <input type="text" id="busReg" class="form-control" placeholder="TN-58-BG-1004" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Bus Type</label>
+            <select id="busType" class="form-control" required>
+              <option value="SLEEPER_AC">AC Sleeper (2+1)</option>
+              <option value="SEATER_AC">AC Executive Seater (2+2)</option>
+              <option value="SEMI_SLEEPER_AC">AC Semi-Sleeper</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Total Seat Capacity</label>
+            <input type="number" id="busCapacity" class="form-control" value="30" min="10" max="60" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-modal="busModal">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm">Save Bus</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD ROUTE -->
+  <div id="routeModal" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Create Route</h3>
+        <button class="modal-close-btn" data-modal="routeModal">&times;</button>
+      </div>
+      <form id="routeForm">
+        <div class="modal-body">
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Origin City</label>
+              <input type="text" id="routeOrigin" class="form-control" placeholder="Madurai" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Destination City</label>
+              <input type="text" id="routeDest" class="form-control" placeholder="Chennai" required>
+            </div>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Estimated Duration (Mins)</label>
+              <input type="number" id="routeDuration" class="form-control" placeholder="480" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Base Fare (₹)</label>
+              <input type="number" id="routeFare" class="form-control" placeholder="750" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Boarding Point</label>
+            <input type="text" id="routeBoarding" class="form-control" placeholder="Mattuthavani Integrated Bus Terminal" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Drop Point</label>
+            <input type="text" id="routeDrop" class="form-control" placeholder="Koyambedu CMBT / Guindy" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-modal="routeModal">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm">Save Route</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD DRIVER -->
+  <div id="driverModal" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Register Driver</h3>
+        <button class="modal-close-btn" data-modal="driverModal">&times;</button>
+      </div>
+      <form id="driverForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Driver Full Name</label>
+            <input type="text" id="driverName" class="form-control" placeholder="M. Murugan" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">License Number</label>
+            <input type="text" id="driverLicense" class="form-control" placeholder="TN58 20180004921" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">WhatsApp Mobile Number</label>
+            <input type="tel" id="driverPhone" class="form-control" placeholder="+919876543211" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-modal="driverModal">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm">Save Driver</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script type="module" src="assets/js/admin.js"></script>
+</body>
+</html>

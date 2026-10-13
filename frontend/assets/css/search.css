@@ -1,0 +1,347 @@
+/* ==============================================================================
+   BusGo Search Results Styles (Filter Sidebar, Bus Result Cards, Badges)
+   ============================================================================== */
+
+/* Search Header Strip */
+.search-strip {
+  background-color: var(--primary-navy);
+  color: #FFFFFF;
+  padding: 1.25rem 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.search-strip-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.route-summary {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.route-cities-title {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.route-cities-title svg {
+  color: var(--accent-cyan);
+}
+
+.route-date-badge {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 0.375rem 0.875rem;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  color: #CBD5E1;
+}
+
+/* Main Layout: Sidebar Filters + Bus Results */
+.search-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 2rem;
+  padding: 2.5rem 0 4rem;
+}
+
+/* Filter Sidebar */
+.filter-sidebar {
+  background-color: var(--bg-surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+  padding: 1.5rem;
+  height: fit-content;
+  position: sticky;
+  top: calc(var(--header-height) + 1.5rem);
+}
+
+.filter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-light);
+  margin-bottom: 1.25rem;
+}
+
+.filter-header h3 {
+  font-size: var(--font-size-base);
+  font-weight: 700;
+}
+
+.filter-reset-btn {
+  background: none;
+  border: none;
+  color: var(--accent-cyan);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.filter-reset-btn:hover {
+  text-decoration: underline;
+}
+
+.filter-group {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.filter-group:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.filter-title {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  margin-bottom: 0.875rem;
+  color: var(--primary-navy);
+}
+
+.filter-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--font-size-sm);
+  color: var(--text-main);
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-label input {
+  accent-color: var(--accent-cyan);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* Results Content */
+.results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.results-count {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--primary-navy);
+}
+
+.sort-select {
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+  background-color: var(--bg-surface);
+  font-size: var(--font-size-sm);
+  color: var(--text-main);
+}
+
+/* Bus Card */
+.bus-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.bus-card {
+  background-color: var(--bg-surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+.bus-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: #CBD5E1;
+}
+
+.bus-card-main {
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: 1.5fr 2fr 1fr;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.bus-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.bus-title {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--primary-navy);
+}
+
+.bus-type-badge {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.bus-reg-badge {
+  display: inline-block;
+  background-color: var(--bg-surface-secondary);
+  color: var(--primary-navy);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+  width: fit-content;
+}
+
+/* Schedule Timings in Bus Card */
+.bus-timing-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.time-point {
+  text-align: left;
+}
+
+.time-point.dest {
+  text-align: right;
+}
+
+.time-val {
+  font-size: var(--font-size-xl);
+  font-weight: 800;
+  color: var(--primary-navy);
+}
+
+.point-city {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.point-stop {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.duration-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--text-subtle);
+  font-size: var(--font-size-xs);
+}
+
+.duration-line {
+  display: flex;
+  align-items: center;
+  width: 90px;
+}
+
+.duration-line-bar {
+  flex: 1;
+  height: 2px;
+  background-color: var(--border-strong);
+}
+
+.duration-line svg {
+  color: var(--border-strong);
+}
+
+/* Price & Action */
+.bus-action-strip {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
+.fare-box {
+  text-align: right;
+}
+
+.fare-label {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  display: block;
+}
+
+.fare-amount {
+  font-size: var(--font-size-2xl);
+  font-weight: 800;
+  color: var(--accent-cyan);
+}
+
+.seats-avail-badge {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--accent-emerald);
+  background-color: var(--accent-emerald-light);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+/* Amenities Strip below card */
+.bus-card-footer {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--bg-surface-secondary);
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+.amenities-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .search-layout {
+    grid-template-columns: 1fr;
+  }
+  .filter-sidebar {
+    position: static;
+  }
+  .bus-card-main {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  .bus-action-strip {
+    align-items: flex-start;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}

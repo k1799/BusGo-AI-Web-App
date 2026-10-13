@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Search Intercity Buses — BusGo</title>
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/common.css" />
+  <link rel="stylesheet" href="css/search.css" />
+</head>
+<body>
+  <!-- Unified Navigation Bar -->
+  <header class="navbar">
+    <div class="container">
+      <a href="index.html" class="brand-logo">
+        <span class="brand-logo-badge">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <rect x="3" y="4" width="18" height="14" rx="3"/>
+            <path d="M3 11h18M7 18v2M17 18v2"/>
+          </svg>
+        </span>
+        Bus<span class="accent">Go</span>
+      </a>
+      <nav id="navLinks" class="nav-links"></nav>
+    </div>
+  </header>
+
+  <!-- Compact Modify Search Header -->
+  <section class="search-header-bar">
+    <div class="container">
+      <form id="modifySearchForm" class="search-bar-compact" novalidate>
+        <div class="form-group">
+          <label for="searchOrigin" class="form-label">From City</label>
+          <select id="searchOrigin" class="form-control" required>
+            <option value="Madurai">Madurai</option>
+            <option value="Chennai">Chennai</option>
+            <option value="Coimbatore">Coimbatore</option>
+            <option value="Bangalore">Bangalore</option>
+            <option value="Trichy">Trichy</option>
+          </select>
+        </div>
+
+        <button type="button" class="swap-btn" id="swapCitiesBtn" title="Swap Cities" aria-label="Swap Origin and Destination">⇄</button>
+
+        <div class="form-group">
+          <label for="searchDestination" class="form-label">To City</label>
+          <select id="searchDestination" class="form-control" required>
+            <option value="Chennai">Chennai</option>
+            <option value="Madurai">Madurai</option>
+            <option value="Coimbatore">Coimbatore</option>
+            <option value="Bangalore">Bangalore</option>
+            <option value="Trichy">Trichy</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="searchDate" class="form-label">Travel Date</label>
+          <input type="date" id="searchDate" class="form-control" required />
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="height:42px;">Modify Search</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Main Search Content -->
+  <main class="container search-layout main-content">
+    <!-- Filter Sidebar -->
+    <aside class="filter-sidebar">
+      <div class="filter-header">
+        <h3>Filters</h3>
+        <button type="button" id="resetFiltersBtn" class="btn-link">Reset All</button>
+      </div>
+
+      <div class="filter-group">
+        <h4 class="filter-title">Coach Type</h4>
+        <label class="checkbox-label">
+          <input type="checkbox" name="busType" value="SLEEPER_AC" />
+          <span>AC Sleeper (2+1)</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" name="busType" value="SEATER_AC" />
+          <span>AC Seater (2+2)</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" name="busType" value="NON_AC_SEATER" />
+          <span>Non-AC Seater (2+2)</span>
+        </label>
+      </div>
+
+      <div class="filter-group">
+        <h4 class="filter-title">Departure Time</h4>
+        <label class="checkbox-label">
+          <input type="checkbox" name="timeSlot" value="MORNING" />
+          <span>Morning (06:00 – 12:00)</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" name="timeSlot" value="AFTERNOON" />
+          <span>Afternoon (12:00 – 18:00)</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" name="timeSlot" value="EVENING" />
+          <span>Evening (18:00 – 21:00)</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" name="timeSlot" value="NIGHT" />
+          <span>Night (After 21:00)</span>
+        </label>
+      </div>
+    </aside>
+
+    <!-- Results Area -->
+    <section class="results-area">
+      <div class="results-toolbar">
+        <div id="resultsSummary" class="results-count">Searching available schedules...</div>
+        <div class="sort-controls">
+          <span>Sort by:</span>
+          <select id="sortSelect" class="form-control sort-select">
+            <option value="DEP_ASC">Departure: Earliest</option>
+            <option value="PRICE_ASC">Fare: Low to High</option>
+            <option value="PRICE_DESC">Fare: High to Low</option>
+            <option value="SEATS_DESC">Available Seats</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div id="loadingState" class="empty-state">
+        <div class="spinner"></div>
+        <p style="margin-top:1rem;">Fetching real-time schedules and seat inventory...</p>
+      </div>
+
+      <!-- Empty State -->
+      <div id="emptyState" class="empty-state hidden">
+        <div class="empty-state-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="14" rx="3"/><path d="M3 11h18M7 18v2M17 18v2"/>
+          </svg>
+        </div>
+        <h3>No Buses Found for This Route &amp; Date</h3>
+        <p id="emptyStateDesc">Try selecting another date or switching between Madurai, Chennai, and Coimbatore.</p>
+      </div>
+
+      <!-- Trips List -->
+      <div id="tripsList" class="trips-list"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom" style="padding-top:0;">
+        <span>&copy; 2026 BusGo Transport Technologies Pvt. Ltd. All rights reserved.</span>
+        <span>Verified Live Seat Inventory</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/search.js"></script>
+</body>
+</html>

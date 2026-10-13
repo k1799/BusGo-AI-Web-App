@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Select Your Seats — BusGo Intercity</title>
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/common.css" />
+  <link rel="stylesheet" href="css/seats.css" />
+</head>
+<body>
+  <!-- Unified Navigation Bar -->
+  <header class="navbar">
+    <div class="container">
+      <a href="index.html" class="brand-logo">
+        <span class="brand-logo-badge">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <rect x="3" y="4" width="18" height="14" rx="3"/>
+            <path d="M3 11h18M7 18v2M17 18v2"/>
+          </svg>
+        </span>
+        Bus<span class="accent">Go</span>
+      </a>
+      <nav id="navLinks" class="nav-links"></nav>
+    </div>
+  </header>
+
+  <main class="container seats-page-layout main-content">
+    <!-- Left Column: Trip Banner, Legend & Interactive Bus Coach Layout -->
+    <section class="seat-map-section">
+      <!-- Trip Summary Banner -->
+      <div class="trip-summary-banner">
+        <div class="trip-banner-route">
+          <a href="javascript:history.back()" style="color:var(--color-accent); font-size:0.82rem; font-weight:700; display:inline-block; margin-bottom:6px;">← Back to Search Results</a>
+          <h1 id="tripRouteTitle">Loading Route...</h1>
+          <p id="tripBusSubtitle" class="trip-banner-meta">Fetching coach configuration...</p>
+        </div>
+        <div class="trip-banner-times">
+          <div class="banner-time-item">
+            <span class="banner-time-label">Departure</span>
+            <strong id="tripDepTime" class="banner-time-val">--:--</strong>
+          </div>
+          <span class="banner-time-arrow">→</span>
+          <div class="banner-time-item">
+            <span class="banner-time-label">Arrival</span>
+            <strong id="tripArrTime" class="banner-time-val">--:--</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seat Status Legend -->
+      <div class="seat-legend-card" aria-label="Seat status legend">
+        <div class="legend-items-wrap">
+          <div class="legend-item">
+            <span class="legend-swatch swatch-available"></span>
+            <span>Available</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-swatch swatch-selected"></span>
+            <span>Selected</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-swatch swatch-booked"></span>
+            <span>Booked</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-swatch swatch-held"></span>
+            <span>Temporarily Held</span>
+          </div>
+        </div>
+        <span class="seat-limit-pill">Max 6 seats per booking</span>
+      </div>
+
+      <!-- Loading State -->
+      <div id="seatMapLoading" class="empty-state">
+        <div class="spinner"></div>
+        <p style="margin-top:1rem;">Loading live bus coach seat layout...</p>
+      </div>
+
+      <!-- Bus Coach Decks Grid -->
+      <div id="busDecksContainer" class="bus-decks-grid hidden">
+        <!-- Lower Deck Coach Frame -->
+        <div class="bus-coach-frame" id="lowerDeckBox">
+          <div class="deck-badge-header">
+            <span class="deck-title" id="lowerDeckTitle">Lower Deck</span>
+            <span class="deck-subtitle">Front of Coach ↑</span>
+          </div>
+
+          <!-- Driver & Front-of-Bus Cockpit Indicator -->
+          <div class="bus-front-cockpit">
+            <div class="bus-entry-indicator">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
+              </svg>
+              <span>Entry / Steps</span>
+            </div>
+            <div class="bus-driver-indicator" title="Driver Cabin (Front of Bus)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <circle cx="12" cy="12" r="9"/>
+                <circle cx="12" cy="12" r="2.5"/>
+                <path d="M12 3v6.5M4.2 16.5l5.6-3.2M19.8 16.5l-5.6-3.2"/>
+              </svg>
+              <span>Driver / Front</span>
+            </div>
+          </div>
+
+          <div class="bus-section-labels" id="lowerSectionLabels">
+            <span>Left Section</span>
+            <span>Aisle</span>
+            <span>Right Section</span>
+          </div>
+
+          <div id="lowerDeckGrid" class="bus-seat-rows"></div>
+        </div>
+
+        <!-- Upper Deck Coach Frame (Displayed for Sleeper Coaches) -->
+        <div class="bus-coach-frame hidden" id="upperDeckBox">
+          <div class="deck-badge-header">
+            <span class="deck-title">Upper Deck (Sleeper Berths)</span>
+            <span class="deck-subtitle">Front of Coach ↑</span>
+          </div>
+
+          <div class="bus-front-cockpit">
+            <div class="bus-entry-indicator">
+              <span>Upper Cabin</span>
+            </div>
+            <div class="bus-driver-indicator">
+              <span>Above Driver Cabin</span>
+            </div>
+          </div>
+
+          <div class="bus-section-labels layout-sleeper">
+            <span>Left Berth</span>
+            <span>Aisle</span>
+            <span>Right Berths</span>
+          </div>
+
+          <div id="upperDeckGrid" class="bus-seat-rows"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Column: Booking Summary & Proceed Sidebar -->
+    <aside class="booking-summary-sidebar">
+      <div class="booking-summary-card">
+        <h3 class="summary-card-title">Booking Summary</h3>
+
+        <div class="route-timeline-mini">
+          <div class="timeline-stop">
+            <span class="timeline-dot"></span>
+            <div class="stop-label">Boarding Point</div>
+            <div class="stop-city" id="summaryOriginCity">—</div>
+            <div class="stop-point" id="summaryBoardingPoint">—</div>
+          </div>
+          <div class="timeline-stop">
+            <span class="timeline-dot drop"></span>
+            <div class="stop-label">Dropping Point</div>
+            <div class="stop-city" id="summaryDestCity">—</div>
+            <div class="stop-point" id="summaryDroppingPoint">—</div>
+          </div>
+        </div>
+
+        <div class="selected-seats-panel">
+          <div class="selected-seats-header">
+            <span>Selected Seats</span>
+            <span id="selectedCountBadge" class="badge badge-primary">0 / 6 Max</span>
+          </div>
+          <div id="selectedSeatsList" class="selected-seats-badges">
+            <span style="font-size:0.84rem; color:var(--color-text-secondary);">Click an available seat on the coach layout to begin.</span>
+          </div>
+        </div>
+
+        <div class="fare-breakdown-box">
+          <div class="fare-row">
+            <span>Fare per Seat</span>
+            <strong id="summaryBaseFare" style="color:var(--color-text-primary);">—</strong>
+          </div>
+          <div class="fare-row">
+            <span>Selected Quantity</span>
+            <strong id="summarySeatQty" style="color:var(--color-text-primary);">0 Seats</strong>
+          </div>
+          <div class="fare-total-row">
+            <span>Total Price</span>
+            <span id="summaryTotalAmount" class="total-val">₹0</span>
+          </div>
+        </div>
+
+        <button id="proceedBookingBtn" type="button" class="btn btn-primary btn-block btn-lg" disabled>
+          Continue to Passenger Details
+        </button>
+
+        <p style="font-size:0.78rem; color:var(--color-text-secondary); text-align:center; margin-top:0.85rem;">
+          🔒 Seats are locked exclusively for 10 minutes once you proceed.
+        </p>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom" style="padding-top:0;">
+        <span>&copy; 2026 BusGo Transport Technologies Pvt. Ltd. All rights reserved.</span>
+        <span>Real-Time Atomic Seat Inventory</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/seats.js"></script>
+</body>
+</html>

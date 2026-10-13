@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digital E-Ticket &amp; Boarding Pass — BusGo</title>
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/common.css" />
+  <link rel="stylesheet" href="css/ticket.css" />
+</head>
+<body>
+  <!-- Unified Navigation Bar -->
+  <header class="navbar no-print">
+    <div class="container">
+      <a href="index.html" class="brand-logo">
+        <span class="brand-logo-badge">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <rect x="3" y="4" width="18" height="14" rx="3"/>
+            <path d="M3 11h18M7 18v2M17 18v2"/>
+          </svg>
+        </span>
+        Bus<span class="accent">Go</span>
+      </a>
+      <nav id="navLinks" class="nav-links"></nav>
+    </div>
+  </header>
+
+  <main class="container ticket-container main-content">
+    <div class="ticket-actions-bar no-print">
+      <a href="my-bookings.html" class="btn btn-outline">← Back to My Bookings</a>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button id="printTicketBtn" type="button" class="btn btn-primary">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>
+          </svg>
+          Print / Save PDF
+        </button>
+        <button id="cancelBookingBtn" type="button" class="btn btn-danger hidden">Cancel Ticket</button>
+      </div>
+    </div>
+
+    <div id="ticketLoading" class="empty-state">
+      <div class="spinner"></div>
+      <p style="margin-top:1rem;">Loading verified digital e-ticket...</p>
+    </div>
+
+    <!-- Printable Digital E-Ticket Card -->
+    <article id="ticketCard" class="digital-ticket-card hidden">
+      <div class="ticket-header">
+        <div class="ticket-brand">
+          <div class="ticket-brand-logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <rect x="3" y="4" width="18" height="14" rx="3"/><path d="M3 11h18M7 18v2M17 18v2"/>
+            </svg>
+          </div>
+          <div>
+            <h1 class="ticket-title">BusGo Intercity Express</h1>
+            <p class="ticket-subtitle">Verified Electronic Boarding Pass &amp; Tax Invoice</p>
+          </div>
+        </div>
+        <div class="ticket-status-area">
+          <span id="ticketStatusBadge" class="badge badge-success">CONFIRMED</span>
+          <div class="ticket-ref">Booking Ref: <strong id="ticketRefCode">BG-XXXXXX</strong></div>
+        </div>
+      </div>
+
+      <div class="ticket-body">
+        <div class="ticket-route-section">
+          <div class="route-point origin">
+            <div class="city-name" id="tOriginCity">Madurai</div>
+            <div class="time-display" id="tDepTime">21:00</div>
+            <div class="date-display" id="tTravelDate">—</div>
+            <div class="boarding-point" id="tBoardingPoint">Mattuthavani Omnibus Stand</div>
+          </div>
+
+          <div class="route-connector">
+            <span class="duration-pill" id="tDuration">8h 00m</span>
+            <div class="connector-line">
+              <span class="bus-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <rect x="3" y="4" width="18" height="14" rx="3"/><path d="M3 11h18M7 18v2M17 18v2"/>
+                </svg>
+              </span>
+            </div>
+          </div>
+
+          <div class="route-point destination">
+            <div class="city-name" id="tDestCity">Chennai</div>
+            <div class="time-display" id="tArrTime">05:00</div>
+            <div class="date-display" id="tArrivalDate">—</div>
+            <div class="boarding-point" id="tDroppingPoint">Koyambedu CMBT</div>
+          </div>
+        </div>
+
+        <div class="ticket-meta-grid">
+          <div class="meta-item">
+            <span class="meta-label">Bus Operator / Coach</span>
+            <strong class="meta-value" id="tBusName">—</strong>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Registration No.</span>
+            <strong class="meta-value" id="tRegNo">—</strong>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Coach Class</span>
+            <strong class="meta-value" id="tBusType">—</strong>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Assigned Driver</span>
+            <strong class="meta-value" id="tDriverInfo">—</strong>
+          </div>
+        </div>
+
+        <div class="ticket-passengers-section">
+          <h3 class="section-heading">Confirmed Passenger Manifest</h3>
+          <table class="passengers-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Passenger Name</th>
+                <th>Age / Gender</th>
+                <th>Seat Number</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="tPassengersBody"></tbody>
+          </table>
+        </div>
+
+        <div class="ticket-footer-grid">
+          <div class="payment-summary-box">
+            <h4 class="section-heading">Payment &amp; Transaction Summary</h4>
+            <div class="summary-line">
+              <span>Payment Gateway</span>
+              <strong id="tPaymentGateway">DEMO</strong>
+            </div>
+            <div class="summary-line">
+              <span>Transaction ID</span>
+              <strong id="tPaymentId">—</strong>
+            </div>
+            <div class="summary-line">
+              <span>Payment Status</span>
+              <strong id="tPaymentStatus">SUCCESS</strong>
+            </div>
+            <div class="summary-line total">
+              <span>Total Amount Paid</span>
+              <strong id="tTotalPaid">₹0</strong>
+            </div>
+          </div>
+
+          <div class="qr-verification-box">
+            <div class="qr-placeholder" id="tQrCodeBox" aria-label="Ticket verification QR code">
+              <svg viewBox="0 0 100 100" width="96" height="96">
+                <rect x="8" y="8" width="26" height="26" fill="#10243A"/>
+                <rect x="13" y="13" width="16" height="16" fill="#FFFFFF"/>
+                <rect x="16" y="16" width="10" height="10" fill="#1769FF"/>
+                <rect x="66" y="8" width="26" height="26" fill="#10243A"/>
+                <rect x="71" y="13" width="16" height="16" fill="#FFFFFF"/>
+                <rect x="74" y="16" width="10" height="10" fill="#1769FF"/>
+                <rect x="8" y="66" width="26" height="26" fill="#10243A"/>
+                <rect x="13" y="71" width="16" height="16" fill="#FFFFFF"/>
+                <rect x="16" y="74" width="10" height="10" fill="#1769FF"/>
+                <rect x="42" y="16" width="12" height="12" fill="#10243A"/>
+                <rect x="42" y="42" width="16" height="16" fill="#1769FF"/>
+                <rect x="66" y="48" width="18" height="10" fill="#10243A"/>
+                <rect x="44" y="72" width="44" height="14" fill="#10243A"/>
+              </svg>
+            </div>
+            <div class="qr-caption" id="tQrPayloadText">SCAN AT BOARDING</div>
+          </div>
+        </div>
+
+        <div class="ticket-terms">
+          <strong>Important Boarding Instructions:</strong>
+          <ul>
+            <li>Please arrive at the boarding point at least 15 minutes before scheduled departure.</li>
+            <li>Carry a valid Government Photo ID (Aadhaar, Passport, Driving License, or Voter ID) matching the passenger manifest.</li>
+            <li>Automated WhatsApp passenger manifest is dispatched to the assigned driver 15 minutes prior to departure.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ticket.js"></script>
+</body>
+</html>

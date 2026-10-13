@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Passenger Details &amp; Secure Payment — BusGo</title>
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/common.css" />
+  <link rel="stylesheet" href="css/checkout.css" />
+</head>
+<body>
+  <!-- Unified Navigation Bar -->
+  <header class="navbar">
+    <div class="container">
+      <a href="index.html" class="brand-logo">
+        <span class="brand-logo-badge">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <rect x="3" y="4" width="18" height="14" rx="3"/>
+            <path d="M3 11h18M7 18v2M17 18v2"/>
+          </svg>
+        </span>
+        Bus<span class="accent">Go</span>
+      </a>
+      <nav id="navLinks" class="nav-links"></nav>
+    </div>
+  </header>
+
+  <main class="container checkout-page-layout main-content">
+    <!-- Left Column: Hold Timer, Passenger Forms & Payment Gateway -->
+    <div class="checkout-forms-col">
+      <!-- Active Seat Hold Countdown Banner -->
+      <div class="hold-timer-banner" id="holdTimerBanner">
+        <div>
+          <span>⏱️ Your selected seats are temporarily locked. Complete booking within:</span>
+        </div>
+        <span class="hold-timer-countdown" id="holdCountdownText">10:00</span>
+      </div>
+
+      <!-- Step 1: Passenger Details -->
+      <section class="checkout-section-card">
+        <div class="checkout-section-header">
+          <span class="step-badge">1</span>
+          <div>
+            <h2 style="font-size:1.15rem;">Passenger Manifest Details</h2>
+            <p style="font-size:0.84rem; color:var(--color-text-secondary);">Enter accurate traveler names and ages as per government ID</p>
+          </div>
+        </div>
+        <div id="passengersContainer"></div>
+      </section>
+
+      <!-- Step 2: Contact Information -->
+      <section class="checkout-section-card">
+        <div class="checkout-section-header">
+          <span class="step-badge">2</span>
+          <div>
+            <h2 style="font-size:1.15rem;">E-Ticket &amp; Boarding Alert Contact</h2>
+            <p style="font-size:0.84rem; color:var(--color-text-secondary);">Your digital boarding pass and driver details will be sent here</p>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:1rem;">
+          <div class="form-group" style="margin-bottom:0;">
+            <label for="contactEmail" class="form-label">Email Address *</label>
+            <input type="email" id="contactEmail" class="form-control" placeholder="traveler@example.com" required />
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label for="contactPhone" class="form-label">WhatsApp / Mobile Number *</label>
+            <input type="tel" id="contactPhone" class="form-control" placeholder="9876543210" required />
+          </div>
+        </div>
+      </section>
+
+      <!-- Step 3: Payment Gateway Mode -->
+      <section class="checkout-section-card">
+        <div class="checkout-section-header">
+          <span class="step-badge">3</span>
+          <div>
+            <h2 style="font-size:1.15rem;">Select Payment Mode</h2>
+            <p style="font-size:0.84rem; color:var(--color-text-secondary);">Instant demo payment verification with zero real money charged</p>
+          </div>
+        </div>
+
+        <div class="payment-methods-grid">
+          <label class="payment-method-option active" id="optDemo">
+            <input type="radio" name="paymentMode" value="DEMO" class="payment-radio" checked />
+            <div>
+              <strong style="display:block; font-size:0.95rem; color:var(--color-navy-900);">Instant Demo Payment</strong>
+              <span style="font-size:0.8rem; color:var(--color-text-secondary);">Simulated instant confirmation for testing &amp; evaluation</span>
+            </div>
+          </label>
+
+          <label class="payment-method-option" id="optUpi">
+            <input type="radio" name="paymentMode" value="RAZORPAY_DEMO" class="payment-radio" />
+            <div>
+              <strong style="display:block; font-size:0.95rem; color:var(--color-navy-900);">UPI / Cards (Sandbox)</strong>
+              <span style="font-size:0.8rem; color:var(--color-text-secondary);">Simulated gateway signature verification flow</span>
+            </div>
+          </label>
+        </div>
+      </section>
+    </div>
+
+    <!-- Right Column: Sticky Order Summary -->
+    <aside class="order-summary-card">
+      <h3 style="font-size:1.15rem; color:var(--color-navy-900); padding-bottom:1rem; margin-bottom:1rem; border-bottom:1px solid var(--color-border);">
+        Trip &amp; Fare Summary
+      </h3>
+
+      <div style="margin-bottom:1rem;">
+        <div style="font-weight:800; font-size:1.1rem; color:var(--color-navy-900);" id="checkoutRouteTitle">—</div>
+        <div style="font-size:0.85rem; color:var(--color-text-secondary); margin-top:2px;" id="checkoutBusName">—</div>
+        <div style="font-size:0.82rem; color:var(--color-primary); font-weight:700; margin-top:6px;" id="checkoutTravelDate">—</div>
+      </div>
+
+      <div style="background:var(--color-bg-page); border:1px solid var(--color-border); border-radius:var(--radius-md); padding:0.85rem; margin-bottom:1rem; font-size:0.84rem;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+          <span style="color:var(--color-text-secondary);">Boarding:</span>
+          <strong id="checkoutBoardingPoint">—</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between;">
+          <span style="color:var(--color-text-secondary);">Dropping:</span>
+          <strong id="checkoutDroppingPoint">—</strong>
+        </div>
+      </div>
+
+      <div style="border-top:1px solid var(--color-border); padding-top:1rem; margin-bottom:1.25rem;">
+        <div style="display:flex; justify-content:space-between; font-size:0.875rem; margin-bottom:8px;">
+          <span style="color:var(--color-text-secondary);">Reserved Seats:</span>
+          <strong id="checkoutSeatBadges" style="color:var(--color-primary);">—</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:0.875rem; margin-bottom:8px;">
+          <span style="color:var(--color-text-secondary);">Base Ticket Fare:</span>
+          <span id="checkoutSubtotal">₹0</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:0.875rem; margin-bottom:8px;">
+          <span style="color:var(--color-text-secondary);">Reservation &amp; GST:</span>
+          <span style="color:var(--color-success); font-weight:700;">Included</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px dashed var(--color-border-strong); padding-top:0.85rem; margin-top:0.85rem;">
+          <strong style="font-size:1rem; color:var(--color-navy-900);">Total Payable</strong>
+          <strong id="checkoutTotalPayable" style="font-size:1.45rem; color:var(--color-primary); font-family:var(--font-display);">₹0</strong>
+        </div>
+      </div>
+
+      <button type="button" id="payAndConfirmBtn" class="btn btn-primary btn-block btn-lg">
+        Confirm &amp; Pay Now
+      </button>
+
+      <p style="font-size:0.76rem; color:var(--color-text-secondary); text-align:center; margin-top:0.75rem;">
+        🛡️ 256-Bit Encrypted Transaction • Instant Digital E-Ticket
+      </p>
+    </aside>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/checkout.js"></script>
+</body>
+</html>

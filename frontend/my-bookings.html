@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Bookings &amp; Trips — BusGo Intercity</title>
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/common.css" />
+</head>
+<body>
+  <!-- Unified Navigation Bar -->
+  <header class="navbar">
+    <div class="container">
+      <a href="index.html" class="brand-logo">
+        <span class="brand-logo-badge">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <rect x="3" y="4" width="18" height="14" rx="3"/>
+            <path d="M3 11h18M7 18v2M17 18v2"/>
+          </svg>
+        </span>
+        Bus<span class="accent">Go</span>
+      </a>
+      <nav id="navLinks" class="nav-links"></nav>
+    </div>
+  </header>
+
+  <main class="container bookings-page-wrap main-content">
+    <div class="bookings-header">
+      <div>
+        <h1 style="font-size:1.75rem; color:var(--color-navy-900);">My Bookings &amp; Trips</h1>
+        <p style="color:var(--color-text-secondary); font-size:0.95rem;">Manage your confirmed bus reservations, download e-tickets, or request cancellations</p>
+      </div>
+      <a href="index.html" class="btn btn-primary">+ Book New Trip</a>
+    </div>
+
+    <div class="booking-tabs" role="tablist">
+      <button type="button" class="booking-tab active" data-filter="ALL">All Bookings</button>
+      <button type="button" class="booking-tab" data-filter="CONFIRMED">Confirmed</button>
+      <button type="button" class="booking-tab" data-filter="CANCELLED">Cancelled</button>
+    </div>
+
+    <div id="bookingsLoading" class="empty-state">
+      <div class="spinner"></div>
+      <p style="margin-top:1rem;">Loading your travel history...</p>
+    </div>
+
+    <div id="bookingsEmpty" class="empty-state hidden">
+      <div class="empty-state-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+      </div>
+      <h3>No Bookings Found</h3>
+      <p>You don't have any bookings matching this filter yet.</p>
+      <a href="index.html" class="btn btn-primary" style="margin-top:1.25rem;">Search Intercity Buses</a>
+    </div>
+
+    <div id="bookingsList"></div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom" style="padding-top:0;">
+        <span>&copy; 2026 BusGo Transport Technologies Pvt. Ltd. All rights reserved.</span>
+        <span>Verified Digital Boarding Passes</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/my-bookings.js"></script>
+</body>
+</html>
