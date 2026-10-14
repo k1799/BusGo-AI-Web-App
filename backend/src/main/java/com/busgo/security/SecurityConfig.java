@@ -34,7 +34,7 @@ public class SecurityConfig {
 
     public SecurityConfig(
             JwtAuthenticationFilter jwtAuthenticationFilter,
-            @Value("${busgo.cors.allowed-origins:http://localhost:5500,http://127.0.0.1:5500,http://localhost:8080}") String allowedOriginsStr) {
+            @Value("${busgo.cors.allowed-origins:*}") String allowedOriginsStr) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.allowedOriginsStr = allowedOriginsStr;
     }
@@ -87,15 +87,31 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+        
         List<String> origins = Arrays.stream(allowedOriginsStr.split(","))
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
                 .toList();
 
-        configuration.setAllowedOrigins(origins);
+        if (origins.contains("*") || allowedOriginsStr.equals("*") || origins.isEmpty()) {
+            configuration.setAllowedOriginPatterns(List.of("*"));
+        } else {
+            for (String origin : origins) {
+                configuration.addAllowedOrigin(origin);
+            }
+            configuration.setAllowedOriginPatterns(List.of(
+                "http://localhost:*",
+                "http://127.0.0.1:*",
+                "https://*.railway.app",
+                "https://*.up.railway.app",
+                "https://*.rlwy.net",
+                "*"
+            ));
+        }
+
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin"));
-        configuration.setExposedHeaders(List.of("Authorization"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setExposedHeaders(List.of("Authorization", "Content-Disposition"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 
