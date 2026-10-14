@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.io.File;
+import java.net.URI;
 import java.util.TimeZone;
 
 @SpringBootApplication
@@ -21,11 +22,70 @@ public class BusGoApplication {
         // Safe .env loader: search current directory, parent directory, and root workspace
         loadDotenvSafely();
 
+        // Auto-configure cloud/Railway database environment variables if present
+        configureDatabaseEnvironment();
+
         // Default business timezone: Asia/Kolkata
         TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
 
         SpringApplication.run(BusGoApplication.class, args);
         log.info("BusGo Application successfully started in Asia/Kolkata timezone.");
+    }
+
+    /**
+     * Translates standard Railway / cloud PostgreSQL environment variables (DATABASE_URL,
+     * PGHOST, etc.) into Spring Boot JDBC datasource properties so the application can connect
+     * out of the box without requiring manual JDBC URL formatting.
+     */
+    private static void configureDatabaseEnvironment() {
+        String dbUrl = System.getenv("DATABASE_URL");
+        if (dbUrl == null || dbUrl.isBlank()) {
+            dbUrl = System.getenv("DATABASE_PUBLIC_URL");
+        }
+        if (dbUrl == null || dbUrl.isBlank()) {
+            dbUrl = System.getenv("DB_URL");
+        }
+
+        if (dbUrl != null && !dbUrl.isBlank()) {
+            try {
+                if (dbUrl.startsWith("jdbc:postgresql://")) {
+                    System.setProperty("spring.datasource.url", dbUrl);
+                } else if (dbUrl.startsWith("postgres://") || dbUrl.startsWith("postgresql://")) {
+                    URI uri = new URI(dbUrl.replace("postgres://", "postgresql://"));
+                    String userInfo = uri.getUserInfo();
+                    String host = uri.getHost();
+                    int port = uri.getPort() == -1 ? 5432 : uri.getPort();
+                    String path = uri.getPath();
+                    String query = uri.getQuery();
+
+                    String jdbcUrl = "jdbc:postgresql://" + host + ":" + port + path + (query != null ? "?" + query : "");
+                    System.setProperty("spring.datasource.url", jdbcUrl);
+
+                    if (userInfo != null && userInfo.contains(":")) {
+                        String[] parts = userInfo.split(":", 2);
+                        System.setProperty("spring.datasource.username", parts[0]);
+                        System.setProperty("spring.datasource.password", parts[1]);
+                    }
+                    log.info("Auto-configured Spring datasource from DATABASE_URL -> host={}:{}", host, port);
+                }
+            } catch (Exception e) {
+                log.error("Failed to parse DATABASE_URL: {}. Falling back to standard configuration.", e.getMessage());
+            }
+        } else if (System.getenv("PGHOST") != null) {
+            String host = System.getenv("PGHOST");
+            String port = System.getenv("PGPORT") != null ? System.getenv("PGPORT") : "5432";
+            String database = System.getenv("PGDATABASE") != null ? System.getenv("PGDATABASE") : "railway";
+            String jdbcUrl = "jdbc:postgresql://" + host + ":" + port + "/" + database;
+            System.setProperty("spring.datasource.url", jdbcUrl);
+
+            if (System.getenv("PGUSER") != null) {
+                System.setProperty("spring.datasource.username", System.getenv("PGUSER"));
+            }
+            if (System.getenv("PGPASSWORD") != null) {
+                System.setProperty("spring.datasource.password", System.getenv("PGPASSWORD"));
+            }
+            log.info("Auto-configured Spring datasource from PGHOST -> {}", jdbcUrl);
+        }
     }
 
     private static void loadDotenvSafely() {
